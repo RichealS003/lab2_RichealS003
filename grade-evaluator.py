@@ -81,8 +81,23 @@ def evaluate_grades(data):
     #These variables contain the total weights and actual scores respectively, to be used later in the program.
     total_weights = summative_total + formative_total
     total_score_earned = formative_earned + summative_earned
+    
+    #Calculating the formative percentage to determine if a student passes or fails.
+    if formative_total == 60 and formative_earned <= 60:
+        percent_score_formative = (formative_earned/formative_total) * 100
+    else:
+        print("Formative weights should be exactly 60. Please try again.")
+        return
 
-    if 
+    #Calculating the formative percentage to determine if a student passes or fails.
+    if summative_total == 40 and summative_earned <= 40:
+        percent_score_summative = (summative_earned/summative_total) * 100
+    else:
+        print("Summative weights should be exactly 40. Please try again.")
+        return
+    
+
+
 
 
     print("\n--- Processing Grades ---")
