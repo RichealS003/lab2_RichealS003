@@ -36,6 +36,53 @@ def evaluate_grades(data):
     Implement your logic here.
     'data' is a list of dictionaries containing the assignment records.
     """
+    #Setting/creating the total variables for both formative and summative. 
+    #These variables will hold the required total weights of both formative and summative.
+    formative_total = 0
+    summative_total = 0
+
+    #These variables will hold the actual total scores earned in both formative and summative.
+    formative_earned = 0
+    summative_earned = 0
+    
+    #This loop checks the score validation to make sure it falls within a percentage score(0 -100).:
+    for assignment in data:
+
+        if assignment["score"] < 0 or assignment["score"] > 100:
+            print("Score must be a percentage(Between 0 - 100).")
+            return
+        
+        if assignment["group"] == "Formative":
+            
+            #Updating the formative_total variable with the individual weights, combining them to get a total.
+            formative_total += assignment["weight"]
+
+            #Created this variable to use to calculate the score actually earned in the formative.
+            stud_formative_score = (assignment["score"]/100) * assignment["weight"]
+
+            #Updating the formative_earned variable with the individual actual scores earned in the formative, combining them to get a total.
+            formative_earned += stud_formative_score
+
+        elif assignment["group"] == "Summative":
+
+            #Updating the summative_total variable with the individual weights, combining them to get a total.
+            summative_total += assignment["weight"]
+
+            #Created this variable to use to calculate the score actually earned in the summative.
+            stud_summative_score = (assignment["score"]/100) * assignment["weight"]
+
+            #Updating the summative_earned variable with the individual actual scores earned in the summative, combining them to get a total.
+            summative_earned += stud_summative_score
+
+        else:
+
+            print("Something isn't right. Please try again.")
+            return
+    #These variables contain the total weights and actual scores respectively, to be used later in the program.
+    total_weights = summative_total + formative_total
+    total_score_earned = formative_earned + summative_earned
+
+
     print("\n--- Processing Grades ---")
     
     # TODO: a) Check if all scores are percentage based (0-100)
