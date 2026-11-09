@@ -82,6 +82,8 @@ def evaluate_grades(data):
     total_weights = summative_total + formative_total
     total_score_earned = formative_earned + summative_earned
 
+    if 
+
 
     print("\n--- Processing Grades ---")
     
