@@ -44,8 +44,9 @@ def evaluate_grades(data):
     #These variables will hold the actual total scores earned in both formative and summative.
     formative_earned = 0
     summative_earned = 0
+    resubmission_options = []
     
-    #This loop checks the score validation to make sure it falls within a percentage score(0 -100).:
+    #This loop checks the score validation to make sure it falls within a percentage score(0 -100).
     for assignment in data:
 
         if assignment["score"] < 0 or assignment["score"] > 100:
@@ -57,11 +58,14 @@ def evaluate_grades(data):
             #Updating the formative_total variable with the individual weights, combining them to get a total.
             formative_total += assignment["weight"]
 
-            #Created this variable to use to calculate the score actually earned in the formative.
+            #Created this variable to use to calculate the score actually earned in the formative by the student.
             stud_formative_score = (assignment["score"]/100) * assignment["weight"]
 
             #Updating the formative_earned variable with the individual actual scores earned in the formative, combining them to get a total.
             formative_earned += stud_formative_score
+                
+            # print(resubmission_options)
+
 
         elif assignment["group"] == "Summative":
 
@@ -85,19 +89,53 @@ def evaluate_grades(data):
     #Calculating the formative percentage to determine if a student passes or fails.
     if formative_total == 60 and formative_earned <= 60:
         percent_score_formative = (formative_earned/formative_total) * 100
+        print(f"Student's formative score is {percent_score_formative}")
+
     else:
         print("Formative weights should be exactly 60. Please try again.")
         return
 
-    #Calculating the formative percentage to determine if a student passes or fails.
+    #Calculating the summative percentage to determine if a student passes or fails.
     if summative_total == 40 and summative_earned <= 40:
         percent_score_summative = (summative_earned/summative_total) * 100
+        print(f"Student's summative score is {percent_score_summative}")
     else:
         print("Summative weights should be exactly 40. Please try again.")
         return
-    
+
+    #Determining whether a student passes or fails and validating the total score to make sure it's not more than a hundred
+    if total_weights == 100 and total_weights >= 0:
+        if percent_score_formative >= 50 and percent_score_summative >= 50:
+            print("PASSED")
+        else:
+            print("FAILED")
+    else:
+        print("Total weights should be exactly 100.")
+        return
+
+    #Calculating the GPA 
+    GPA = (total_score_earned/100)*5.0
+    print(GPA)
+
+    #Resubmission logic
+    #This collects the final assignments that are eligible for resubmission
+    resubmission_assignments = []
+    for assignment in data:
+        if assignment["group"] == "Formative":
+            if assignment["score"] < 50:
+                resubmission_options.append(assignment)
+    if resubmission_options:
+        highest_weight = max(item["weight"] for item in resubmission_options)
+        for item in resubmission_options:
+            if item["weight"] == highest_weight:
+                resubmission_assignments.append(item["assignment"])
+    else:
+        print("No assignments are available for resubmission.")
+
+    print(f"Available for resubmission \n{', '.join(resubmission_assignments)}")
 
 
+ 
 
 
     print("\n--- Processing Grades ---")
