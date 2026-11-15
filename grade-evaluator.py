@@ -36,12 +36,12 @@ def evaluate_grades(data):
     Implement your logic here.
     'data' is a list of dictionaries containing the assignment records.
     """
-    #Setting/creating the total variables for both formative and summative. 
+    #Setting/creating variables for both formative and summative. 
     #These variables will hold the required total weights of both formative and summative.
     formative_total = 0
     summative_total = 0
 
-    #These variables will hold the actual total scores earned in both formative and summative.
+    #These variables will hold the actual total scores earned in either formative and summative.
     formative_earned = 0
     summative_earned = 0
     resubmission_options = []
@@ -63,9 +63,6 @@ def evaluate_grades(data):
 
             #Updating the formative_earned variable with the individual actual scores earned in the formative, combining them to get a total.
             formative_earned += stud_formative_score
-                
-            # print(resubmission_options)
-
 
         elif assignment["group"] == "Summative":
 
@@ -89,7 +86,7 @@ def evaluate_grades(data):
     #Calculating the formative percentage to determine if a student passes or fails.
     if formative_total == 60 and formative_earned <= 60:
         percent_score_formative = (formative_earned/formative_total) * 100
-        print(f"Student's formative score is {percent_score_formative}")
+        # print(f"Student's formative score is {percent_score_formative}")
 
     else:
         print("Formative weights should be exactly 60. Please try again.")
@@ -98,7 +95,7 @@ def evaluate_grades(data):
     #Calculating the summative percentage to determine if a student passes or fails.
     if summative_total == 40 and summative_earned <= 40:
         percent_score_summative = (summative_earned/summative_total) * 100
-        print(f"Student's summative score is {percent_score_summative}")
+        # print(f"Student's summative score is {percent_score_summative}")
     else:
         print("Summative weights should be exactly 40. Please try again.")
         return
@@ -106,16 +103,17 @@ def evaluate_grades(data):
     #Determining whether a student passes or fails and validating the total score to make sure it's not more than a hundred
     if total_weights == 100 and total_weights >= 0:
         if percent_score_formative >= 50 and percent_score_summative >= 50:
-            print("PASSED")
+            status = "PASSED"
         else:
-            print("FAILED")
+            status = "FAILED"
+
     else:
         print("Total weights should be exactly 100.")
         return
 
     #Calculating the GPA 
     GPA = (total_score_earned/100)*5.0
-    print(GPA)
+    # print(GPA)
 
     #Resubmission logic
     #This collects the final assignments that are eligible for resubmission
@@ -129,16 +127,29 @@ def evaluate_grades(data):
         for item in resubmission_options:
             if item["weight"] == highest_weight:
                 resubmission_assignments.append(item["assignment"])
-    else:
-        print("No assignments are available for resubmission.")
 
-    print(f"Available for resubmission \n{', '.join(resubmission_assignments)}")
+
+    # print(f"Available for resubmission \n{', '.join(resubmission_assignments)}")
 
 
  
 
 
-    print("\n--- Processing Grades ---")
+    print(f"\n--- Processing Grades ---\n")
+
+    print(f"Final Transcript\n")
+    print(f"{'Assignment':<50} {'Category':<10} {'Grade(%)':>15} {'Weight':>12} {'Final Weight':>19}\n")
+    for assignment in data:
+        #The final weight variable her makes it easy for me to get the final weight without having to figure out a way to use the stud_formative or stud_summative scores variables.
+        final_weight = (assignment['score']/100)*assignment['weight']
+        print(f"{assignment['assignment']:<50} {assignment['group']:<10} {assignment['score']:>15} {assignment['weight']:>12} {final_weight:>19.2f}\n")
+    print(f"{'Formatives(60)':<50} {formative_earned:>60.1f}")
+    print(f"{'Summatives(40)':<50} {summative_earned:>60.1f}")
+    print(f"{'GPA':<50} {GPA:>60.2f}")
+    print(f"\n")
+    print(f"{'Status':<50} {status:>60}")
+    print(f"{'Available for resubmission':<50} {', '.join(resubmission_assignments):>60}\n")
+
     
     # TODO: a) Check if all scores are percentage based (0-100)
     # TODO: b) Validate total weights (Total=100, Summative=40, Formative=60)
