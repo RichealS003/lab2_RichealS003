@@ -20,8 +20,21 @@ def load_csv_data():
         with open(filename, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
 
+            #Making sure an error message is printed when there is no header row
+            if not reader.fieldnames:
+                print("Header row is missing. Please try again.")
+                sys.exit(1)
+
             #Making sure that any csv file would still run with this code if the headings had different capitalizations
             reader.fieldnames = [header.strip().lower() for header in reader.fieldnames]
+
+            #Giving the user a specific error message when a header is missing so they know exactly what to do.
+            required_headers = ['assignment', 'group', 'score', 'weight']
+            missing_header = [header for header in required_headers if header not in reader.fieldnames]
+            if missing_header:
+                print(f"The {filename} file is missing the following headers: {', '.join(missing_header)}. Please try again.")
+                sys.exit(1)
+
             row_number = 1
             for row in reader:
                 row_number += 1
